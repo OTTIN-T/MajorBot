@@ -11,7 +11,9 @@ import Resume from "./resume";
 export default class Pause {
   constructor() {}
 
-  static async action(message: Message<boolean>): PauseResult {
+  static async action(message: Message<boolean> | APIMessage): PauseResult {
+    message = message as Message<boolean>;
+
     const guildId: string | undefined = message?.guild?.id;
     if (!guildId) return;
 
@@ -23,7 +25,7 @@ export default class Pause {
         .setColor("#FFA349")
         .setTitle(`Aucune lecture en cours...   🎼`);
 
-      return message.reply({
+      return message.edit({
         embeds: [embed],
       });
     }
@@ -51,9 +53,13 @@ export default class Pause {
       );
 
     message.react("⏸️");
-    return message.reply({
+    return message.edit({
       embeds: [embed],
       components: [PlayerService.player()],
     });
+    // return message.reply({
+    //   embeds: [embed],
+    //   components: [PlayerService.player()],
+    // });
   }
 }

@@ -1,3 +1,4 @@
+import { APIMessage } from "discord-api-types";
 import { Message, MessageEmbed } from "discord.js";
 import distube from "../distube";
 import { StopResult } from "../interfaces/player.interface";
@@ -6,7 +7,9 @@ import BotService from "../services/bot.service";
 export default class Stop {
   constructor() {}
 
-  static action(message: Message<boolean>): StopResult {
+  static action(message: Message<boolean> | APIMessage): StopResult {
+    message = message as Message<boolean>;
+
     if (BotService.botIsConnected(message) === null) return;
 
     if (BotService.botIsConnected(message) === 0) {
@@ -26,8 +29,11 @@ export default class Stop {
       .setTitle(`À plus tard !   👋`);
 
     message.react("⏹️");
-    return message.reply({
+    return message.edit({
       embeds: [embed],
     });
+    // return message.reply({
+    //   embeds: [embed],
+    // });
   }
 }

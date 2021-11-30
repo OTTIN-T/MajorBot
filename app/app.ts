@@ -73,17 +73,24 @@ bot.on("messageCreate", (message: Message<boolean>): void => {
   }
 });
 
-bot.on("interactionCreate", (interaction) => {
+bot.on("interactionCreate", async (interaction) => {
   if (!interaction.isButton()) return;
-  console.log("interaction", interaction.customId);
+  await interaction.reply("⏳");
+  await interaction.deleteReply();
   if (interaction.customId === "play") {
-    // Pause.action(interaction.message);
+    Pause.action(interaction.message);
+    // await interaction.deferReply({ ephemeral: true });
+    // await interaction.editReply("⏯️");
+    // await interaction.deleteReply();
   }
   if (interaction.customId === "skip") {
+    Skip.action(interaction.message);
   }
   if (interaction.customId === "prev") {
+    Prev.action(interaction.message);
   }
   if (interaction.customId === "stop") {
+    Stop.action(interaction.message);
   }
 });
 

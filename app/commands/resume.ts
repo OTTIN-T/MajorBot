@@ -21,7 +21,7 @@ export default class Resume {
         .setColor("#FFA349")
         .setTitle(`Aucune lecture en cours...   🎼`);
 
-      return message.reply({
+      return message.edit({
         embeds: [embed],
       });
     }
@@ -47,7 +47,7 @@ export default class Resume {
       );
 
     message.react("▶️");
-    return message.reply({
+    return message.edit({
       embeds: [embed],
       components: [PlayerService.player()],
     });

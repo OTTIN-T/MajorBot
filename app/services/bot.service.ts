@@ -16,7 +16,7 @@ export default class BotService {
         .setColor("#FF4B4B")
         .setTitle(`👉   Merci de de te mettre dans un channel vocal`);
 
-      message.reply({
+      message.edit({
         embeds: [embed],
       });
 
@@ -48,7 +48,7 @@ export default class BotService {
           )} ${duration}   |   Vues:   ${song.views}`
         );
 
-      queue.textChannel?.send({
+      queue.textChannel?.lastMessage?.edit({
         embeds: [embed],
         components: [PlayerService.player()],
       });
@@ -62,7 +62,7 @@ export default class BotService {
       .setColor("#FFA349")
       .setTitle(`Changement de son...   🔄`);
 
-    message.reply({
+    message.edit({
       embeds: [embed],
     });
   }

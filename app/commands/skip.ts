@@ -1,3 +1,4 @@
+import { APIMessage } from "discord-api-types";
 import { Message, MessageEmbed } from "discord.js";
 import { Queue, Song } from "distube";
 import distube from "../distube";
@@ -8,7 +9,9 @@ import PlayerService from "../services/player.service";
 export default class Skip {
   constructor() {}
 
-  static async action(message: Message<boolean>): SkipResult {
+  static async action(message: Message<boolean> | APIMessage): SkipResult {
+    message = message as Message<boolean>;
+
     if (BotService.botIsConnected(message) === null) return;
 
     if (BotService.botIsConnected(message) === 0) {
@@ -17,7 +20,7 @@ export default class Skip {
         .setColor("#FFA349")
         .setTitle(`Aucune lecture en cours...   🎼`);
 
-      return message.reply({
+      return message.edit({
         embeds: [embed],
       });
     }
@@ -36,7 +39,7 @@ export default class Skip {
         .setColor("#FFA349")
         .setTitle(`Pas de morceau à suivre...   🤷‍♂️`);
 
-      return message.reply({
+      return message.edit({
         embeds: [embed],
         components: [PlayerService.player()],
       });
