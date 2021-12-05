@@ -78,6 +78,9 @@ typings/
 # nuxt.js build output
 .nuxt
 
+# snyk
+.dccache
+
 # vuepress build output
 .vuepress/dist
 
