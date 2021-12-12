@@ -54,6 +54,8 @@ export default class Pause {
 
     message.reactions.removeAll();
     // message.react("⏸️");
+
+    message.react("⏸️");
     return message.edit({
       embeds: [embed],
       components: [PlayerService.player()],

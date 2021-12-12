@@ -1,4 +1,5 @@
 import { Message, MessageEmbed } from "discord.js";
+import DisTube from "distube";
 import distube from "../distube";
 import { BotIsConnected } from "../interfaces/bot.interface";
 import { Voice } from "../interfaces/player.interface";

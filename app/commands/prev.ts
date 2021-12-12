@@ -39,7 +39,7 @@ export default class Prev {
     if (playList.length === 0) {
       message.react("🚫");
 
-      const embed = new MessageEmbed()
+      const noSong = new MessageEmbed()
         .setColor("#FFA349")
         .setTitle(`Pas de morceau précédent...   🤷‍♂️`);
 
