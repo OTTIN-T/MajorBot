@@ -52,7 +52,8 @@ export default class Pause {
         )} ${duration}`
       );
 
-    message.react("⏸️");
+    message.reactions.removeAll();
+    // message.react("⏸️");
     return message.edit({
       embeds: [embed],
       components: [PlayerService.player()],

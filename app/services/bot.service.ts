@@ -7,6 +7,8 @@ import PlayerService from "./player.service";
 
 export default class BotService {
   static botIsConnected(message: Message<boolean>): BotIsConnected {
+    if (!message) return;
+
     const voiceChannel: Voice = message.member?.voice.channel;
 
     if (!voiceChannel) {
@@ -14,9 +16,9 @@ export default class BotService {
 
       const embed = new MessageEmbed()
         .setColor("#FF4B4B")
-        .setTitle(`👉   Merci de de te mettre dans un channel vocal`);
+        .setTitle(`👉   Merci de te mettre dans un channel vocal   👈`);
 
-      message.edit({
+      message.reply({
         embeds: [embed],
       });
 
@@ -31,10 +33,24 @@ export default class BotService {
   }
 
   static playSong(message: Message<boolean>): void {
-    distube.on("playSong", (queue, song) => {
-      message.react("▶️");
-      message.react("🔥");
+    if (!message) return;
 
+    distube.on("error", (message) => {
+      if (message.lastMessage) {
+        message.lastMessage.react("🔇");
+
+        const embed = new MessageEmbed()
+          .setColor("#FFA349")
+          .setTitle(`Erreur dans le lien...   🔇`)
+          .setDescription(`Ou vidéo restreinte (âge, pays, etc.)`);
+
+        message.lastMessage.reply({
+          embeds: [embed],
+        });
+      }
+    });
+
+    distube.on("playSong", (queue, song) => {
       const duration: string =
         song.duration < 60 ? "sec" : song.duration < 3600 ? "min" : "hrs";
 
@@ -48,22 +64,59 @@ export default class BotService {
           )} ${duration}   |   Vues:   ${song.views}`
         );
 
-      queue.textChannel?.lastMessage?.edit({
-        embeds: [embed],
-        components: [PlayerService.player()],
-      });
+      if (!queue.textChannel) {
+        return BotService.editMessage(message, embed);
+      }
+      if (!queue.textChannel.lastMessage) {
+        return BotService.editMessage(message, embed);
+      }
+
+      message.channel.messages
+        .fetch(queue.textChannel.lastMessage.id)
+        .then((messageToReply) => {
+          messageToReply
+            .reply({
+              embeds: [embed],
+              components: [PlayerService.player()],
+            })
+            // .then((msg) => {
+            //   msg.reactions.removeAll();
+            //   // msg.react("▶️");
+            //   // return msg.react("🔥");
+            // })
+            .catch((error) => console.log(error));
+        })
+        .catch((error) => console.log(error));
     });
   }
 
-  static changeSong(message: Message<boolean>): void {
+  static editMessage(message: Message<boolean>, embed: MessageEmbed): void {
+    message
+      .edit({
+        embeds: [embed],
+        components: [PlayerService.player()],
+      })
+      // .then((msg) => {
+      //   msg.reactions.removeAll();
+      //   // msg.react("▶️");
+      //   // return msg.react("🔥");
+      // })
+      .catch((error) => console.log(error));
+  }
+
+  static changeSong(
+    message: Message<boolean>
+  ): Promise<Message<boolean>> | undefined {
+    if (!message) return;
     message.react("🔄");
 
     const embed = new MessageEmbed()
       .setColor("#FFA349")
       .setTitle(`Changement de son...   🔄`);
 
-    message.edit({
+    return message.edit({
       embeds: [embed],
+      components: [PlayerService.player()],
     });
   }
 }

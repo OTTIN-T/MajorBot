@@ -8,25 +8,26 @@ export default class PlayerService {
       .addComponents(
         new MessageButton()
           .setCustomId("play")
-          .setLabel("⏯️")
           .setStyle("PRIMARY")
+          .setEmoji("⏯️")
       )
       .addComponents(
         new MessageButton()
           .setCustomId("prev")
-          .setLabel("⏮️")
+          .setLabel("")
+          .setEmoji("⏮️")
           .setStyle("SECONDARY")
       )
       .addComponents(
         new MessageButton()
           .setCustomId("skip")
-          .setLabel("⏭️")
+          .setEmoji("⏭️")
           .setStyle("SECONDARY")
       )
       .addComponents(
         new MessageButton()
           .setCustomId("stop")
-          .setLabel("⏹️")
+          .setEmoji("⏹️")
           .setStyle("DANGER")
       );
 

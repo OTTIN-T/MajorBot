@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 
-export default class ListCommand {
+export default class Help {
   static action(message: Message<boolean>): Promise<Message<boolean>> {
     const embed = new MessageEmbed()
       .setColor("#379C6F")
@@ -21,7 +21,7 @@ export default class ListCommand {
       
       📊   -    !nwserver  
 
-      📝   -   !commands
+      📝   -   !help
       
       💡   -   other (soon)`);
 

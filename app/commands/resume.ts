@@ -10,6 +10,7 @@ import Pause from "./pause";
 
 export default class Resume {
   static async action(message: Message<boolean>): ResumeResult {
+    if (!message) return;
     const guildId: string | undefined = message?.guild?.id;
     if (!guildId) return;
 
@@ -46,6 +47,7 @@ export default class Resume {
         `Reprise à:   ${FormatService.formatSeconds(currentTime)} ${duration}`
       );
 
+    message.reactions.removeAll();
     message.react("▶️");
     return message.edit({
       embeds: [embed],

@@ -10,6 +10,7 @@ export default class Skip {
   constructor() {}
 
   static async action(message: Message<boolean> | APIMessage): SkipResult {
+    if (!message) return;
     message = message as Message<boolean>;
 
     if (BotService.botIsConnected(message) === null) return;
@@ -39,15 +40,36 @@ export default class Skip {
         .setColor("#FFA349")
         .setTitle(`Pas de morceau à suivre...   🤷‍♂️`);
 
-      return message.edit({
-        embeds: [embed],
-        components: [PlayerService.player()],
-      });
+      message
+        .reply({
+          embeds: [embed],
+        })
+        .then((messageToReply) => {
+          messageToReply.channel.messages
+            .fetch(messageToReply.id)
+            .then((msg) => {
+              setTimeout(() => {
+                return msg.delete();
+              }, 3000);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      return;
     }
 
+    message.reactions.removeAll();
     message.react("⏭️");
-    BotService.changeSong(message);
     distube.skip(message);
+    BotService.changeSong(message);
+    message.reactions.removeAll();
+    message.react("▶️");
+    message.react("🔥");
 
     return BotService.playSong(message);
   }

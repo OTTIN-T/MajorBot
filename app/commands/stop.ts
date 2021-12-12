@@ -8,6 +8,7 @@ export default class Stop {
   constructor() {}
 
   static action(message: Message<boolean> | APIMessage): StopResult {
+    if (!message) return;
     message = message as Message<boolean>;
 
     if (BotService.botIsConnected(message) === null) return;
