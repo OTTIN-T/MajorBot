@@ -59,19 +59,6 @@ bot.on("interactionCreate", async (interaction): Promise<any> => {
   }
 
   await Interaction.action(interaction);
-
-  // if (interaction.customId === "play") {
-  //   await Pause.action(interaction.message);
-  // }
-  // if (interaction.customId === "skip") {
-  //   await Skip.action(interaction.message);
-  // }
-  // if (interaction.customId === "prev") {
-  //   await Prev.action(interaction.message);
-  // }
-  // if (interaction.customId === "stop") {
-  //   await Stop.action(interaction.message);
-  // }
 });
 
 bot.login(process.env.DISCORD_TOKEN);

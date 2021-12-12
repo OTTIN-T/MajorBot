@@ -4,7 +4,6 @@ import { Queue, Song } from "distube";
 import distube from "../distube";
 import { PrevResult } from "../interfaces/player.interface";
 import BotService from "../services/bot.service";
-import PlayerService from "../services/player.service";
 
 export default class Prev {
   constructor() {}
@@ -17,8 +16,8 @@ export default class Prev {
 
     if (BotService.botIsConnected(message) === null) return;
 
-    if (BotService.botIsConnected(message) === 0) {
-      message.react("🔇");
+    if ((await BotService.botIsConnected(message)) === 0) {
+      (await message.react("🔇")).remove();
 
       const embed = new MessageEmbed()
         .setColor("#FFA349")
@@ -37,7 +36,7 @@ export default class Prev {
     const playList: Song[] = queues.previousSongs;
 
     if (playList.length === 0) {
-      message.react("🚫");
+      (await message.react("🚫")).remove();
 
       const noSong = new MessageEmbed()
         .setColor("#FFA349")
@@ -45,7 +44,7 @@ export default class Prev {
 
       message
         .reply({
-          embeds: [embed],
+          embeds: [noSong],
         })
         .then((messageToReply) => {
           messageToReply.channel.messages
@@ -67,11 +66,9 @@ export default class Prev {
     }
     message.reactions.removeAll();
     message.react("⏮️");
+
     distube.previous(message);
     BotService.changeSong(message);
-    message.reactions.removeAll();
-    message.react("▶️");
-    message.react("🔥");
 
     return BotService.playSong(message);
   }

@@ -1,5 +1,5 @@
 import { Message, MessageEmbed } from "discord.js";
-import DisTube from "distube";
+import bot from "../bot";
 import distube from "../distube";
 import { BotIsConnected } from "../interfaces/bot.interface";
 import { Voice } from "../interfaces/player.interface";
@@ -7,13 +7,15 @@ import FormatService from "./format.service";
 import PlayerService from "./player.service";
 
 export default class BotService {
-  static botIsConnected(message: Message<boolean>): BotIsConnected {
+  static async botIsConnected(
+    message: Message<boolean>
+  ): Promise<BotIsConnected> {
     if (!message) return;
 
     const voiceChannel: Voice = message.member?.voice.channel;
 
     if (!voiceChannel) {
-      message.react("💤");
+      (await message.react("💤")).remove();
 
       const embed = new MessageEmbed()
         .setColor("#FF4B4B")
@@ -51,7 +53,9 @@ export default class BotService {
       }
     });
 
-    distube.on("playSong", (queue, song) => {
+    distube.on("playSong", async (queue, song) => {
+      distube.removeAllListeners();
+      bot.user?.setActivity(`en lecture de: ${song.name}`);
       const duration: string =
         song.duration < 60 ? "sec" : song.duration < 3600 ? "min" : "hrs";
 
@@ -64,11 +68,16 @@ export default class BotService {
             song.duration
           )} ${duration}   |   Vues:   ${song.views}`
         );
+      message.reactions.removeAll();
 
       if (!queue.textChannel) {
+        message.react("▶️");
+        (await message.react("🔥")).remove();
         return BotService.editMessage(message, embed);
       }
       if (!queue.textChannel.lastMessage) {
+        message.react("▶️");
+        (await message.react("🔥")).remove();
         return BotService.editMessage(message, embed);
       }
 
@@ -80,11 +89,10 @@ export default class BotService {
               embeds: [embed],
               components: [PlayerService.player()],
             })
-            // .then((msg) => {
-            //   msg.reactions.removeAll();
-            //   // msg.react("▶️");
-            //   // return msg.react("🔥");
-            // })
+            .then(async (msg) => {
+              msg.react("▶️");
+              (await msg.react("🔥")).remove();
+            })
             .catch((error) => console.log(error));
         })
         .catch((error) => console.log(error));
@@ -97,23 +105,19 @@ export default class BotService {
         embeds: [embed],
         components: [PlayerService.player()],
       })
-      // .then((msg) => {
-      //   msg.reactions.removeAll();
-      //   // msg.react("▶️");
-      //   // return msg.react("🔥");
-      // })
       .catch((error) => console.log(error));
   }
 
-  static changeSong(
+  static async changeSong(
     message: Message<boolean>
-  ): Promise<Message<boolean>> | undefined {
+  ): Promise<Promise<Message<boolean>> | undefined> {
     if (!message) return;
-    message.react("🔄");
 
     const embed = new MessageEmbed()
       .setColor("#FFA349")
       .setTitle(`Changement de son...   🔄`);
+
+    (await message.react("🔄")).remove();
 
     return message.edit({
       embeds: [embed],

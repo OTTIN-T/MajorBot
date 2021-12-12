@@ -1,6 +1,5 @@
 import { Message, MessageEmbed } from "discord.js";
 import distube from "../distube";
-import { BotIsConnected } from "../interfaces/bot.interface";
 import { PlayResult } from "../interfaces/player.interface";
 import BotService from "../services/bot.service";
 
@@ -14,7 +13,7 @@ export default class Play {
     distube.removeAllListeners();
 
     if (args.length === 0) {
-      message.react("🔗");
+      (await message.react("🔗")).remove();
       const embed = new MessageEmbed()
         .setColor("#FF4B4B")
         .setTitle(`Il manque un lien...   🙈`);
@@ -25,11 +24,11 @@ export default class Play {
     }
     const listening: number = distube.queues.collection.size;
 
-    if (listening > 0 && BotService.botIsConnected(message) === 1) {
+    if (listening > 0 && (await BotService.botIsConnected(message)) === 1) {
       distube.stop(message);
     }
 
-    if (BotService.botIsConnected(message) === 0) {
+    if ((await BotService.botIsConnected(message)) === 0) {
       message.react("⌛");
 
       const embed = new MessageEmbed()
@@ -47,11 +46,8 @@ export default class Play {
         })
         .catch((error) => console.log(error));
     }
-    message.reactions.removeAll();
 
     distube.play(message, args.join(" "));
-    message.react("▶️");
-    message.react("🔥");
 
     return BotService.playSong(message);
   }

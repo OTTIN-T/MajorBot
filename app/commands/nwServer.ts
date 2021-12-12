@@ -8,6 +8,7 @@ export default class NwServer {
       .setURL(`https://newworldstatus.com/`)
       .setDescription(`Statuts des serveurs New World`);
 
+    message.reactions.removeAll();
     message.react("📶");
     return message.reply({
       embeds: [embed],

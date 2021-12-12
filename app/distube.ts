@@ -10,7 +10,7 @@ const distube: DisTube = new DisTube(bot, {
   emptyCooldown: 5,
   leaveOnFinish: true,
   leaveOnStop: true,
-  // emitNewSongOnly: true,
+  emitNewSongOnly: true,
   savePreviousSongs: true,
   emitAddSongWhenCreatingQueue: true,
   emitAddListWhenCreatingQueue: true,

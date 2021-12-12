@@ -1,4 +1,5 @@
 import { ButtonInteraction, CacheType, Message } from "discord.js";
+import DisTube from "distube";
 import Pause from "./pause";
 import Prev from "./prev";
 import Skip from "./skip";
@@ -9,17 +10,9 @@ export default class Interaction {
 
   static async action(
     interaction: ButtonInteraction<CacheType>
-  ): Promise<void | Message<boolean> | number> {
+  ): Promise<void | Message<boolean> | number | DisTube> {
     if (interaction.customId === "play") {
       return await Pause.action(interaction.message);
-
-      //   .then(async (res) => {
-      //   console.log(
-      //     "Interaction ~ res",
-      //     interaction.channel?.lastMessage?.react("⏸️")
-      //   );
-      //   await interaction.channel?.lastMessage?.react("⏸️");
-      // });
     }
     if (interaction.customId === "skip") {
       return await Skip.action(interaction.message);

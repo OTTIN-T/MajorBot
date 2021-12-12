@@ -7,14 +7,17 @@ import BotService from "../services/bot.service";
 export default class Stop {
   constructor() {}
 
-  static action(message: Message<boolean> | APIMessage): StopResult {
+  static async action(
+    message: Message<boolean> | APIMessage
+  ): Promise<StopResult> {
     if (!message) return;
     message = message as Message<boolean>;
 
     if (BotService.botIsConnected(message) === null) return;
 
-    if (BotService.botIsConnected(message) === 0) {
-      message.react("🔇");
+    if ((await BotService.botIsConnected(message)) === 0) {
+      (await message.react("🔇")).remove();
+
       const embed = new MessageEmbed()
         .setColor("#FFA349")
         .setTitle(`Aucune lecture en cours...   🎼`);
@@ -29,12 +32,10 @@ export default class Stop {
       .setColor("#FF4B4B")
       .setTitle(`À plus tard !   👋`);
 
+    message.reactions.removeAll();
     message.react("⏹️");
     return message.edit({
       embeds: [embed],
     });
-    // return message.reply({
-    //   embeds: [embed],
-    // });
   }
 }

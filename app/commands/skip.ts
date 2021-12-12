@@ -4,7 +4,6 @@ import { Queue, Song } from "distube";
 import distube from "../distube";
 import { SkipResult } from "../interfaces/player.interface";
 import BotService from "../services/bot.service";
-import PlayerService from "../services/player.service";
 
 export default class Skip {
   constructor() {}
@@ -15,8 +14,9 @@ export default class Skip {
 
     if (BotService.botIsConnected(message) === null) return;
 
-    if (BotService.botIsConnected(message) === 0) {
-      message.react("🔇");
+    if ((await BotService.botIsConnected(message)) === 0) {
+      (await message.react("🔇")).remove();
+
       const embed = new MessageEmbed()
         .setColor("#FFA349")
         .setTitle(`Aucune lecture en cours...   🎼`);
@@ -34,7 +34,7 @@ export default class Skip {
     const playList: Song[] = queues.songs;
 
     if (playList.length === 1) {
-      message.react("🚫");
+      (await message.react("🚫")).remove();
 
       const embed = new MessageEmbed()
         .setColor("#FFA349")
@@ -65,11 +65,9 @@ export default class Skip {
 
     message.reactions.removeAll();
     message.react("⏭️");
+
     distube.skip(message);
     BotService.changeSong(message);
-    message.reactions.removeAll();
-    message.react("▶️");
-    message.react("🔥");
 
     return BotService.playSong(message);
   }

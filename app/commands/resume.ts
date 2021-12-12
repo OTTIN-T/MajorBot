@@ -1,7 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 import { Queue, Song } from "distube";
 import distube from "../distube";
-import { BotIsConnected } from "../interfaces/bot.interface";
 import { ResumeResult } from "../interfaces/player.interface";
 import BotService from "../services/bot.service";
 import FormatService from "../services/format.service";
@@ -16,8 +15,9 @@ export default class Resume {
 
     if (BotService.botIsConnected(message) === null) return;
 
-    if (BotService.botIsConnected(message) === 0) {
-      message.react("🔇");
+    if ((await BotService.botIsConnected(message)) === 0) {
+      (await message.react("🔇")).remove();
+
       const embed = new MessageEmbed()
         .setColor("#FFA349")
         .setTitle(`Aucune lecture en cours...   🎼`);

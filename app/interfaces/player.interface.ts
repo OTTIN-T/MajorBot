@@ -1,4 +1,4 @@
-import { Message, MessageButton, StageChannel, VoiceChannel } from "discord.js";
+import { Message, StageChannel, VoiceChannel } from "discord.js";
 import DisTube from "distube";
 
 export type PlayResult = Promise<void | Message<boolean> | DisTube>;

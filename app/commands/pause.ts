@@ -19,8 +19,9 @@ export default class Pause {
 
     if (BotService.botIsConnected(message) === null) return;
 
-    if (BotService.botIsConnected(message) === 0) {
-      message.react("🔇");
+    if ((await BotService.botIsConnected(message)) === 0) {
+      (await message.react("🔇")).remove();
+
       const embed = new MessageEmbed()
         .setColor("#FFA349")
         .setTitle(`Aucune lecture en cours...   🎼`);
@@ -53,16 +54,10 @@ export default class Pause {
       );
 
     message.reactions.removeAll();
-    // message.react("⏸️");
-
     message.react("⏸️");
     return message.edit({
       embeds: [embed],
       components: [PlayerService.player()],
     });
-    // return message.reply({
-    //   embeds: [embed],
-    //   components: [PlayerService.player()],
-    // });
   }
 }

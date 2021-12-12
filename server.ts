@@ -1,5 +1,5 @@
-import http from "http";
 import ENV from "dotenv";
+import http from "http";
 import app from "./app/app";
 import { NormalizePort } from "./app/interfaces/server.interface";
 
